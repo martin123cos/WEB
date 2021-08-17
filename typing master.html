@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Master</title>
+
+    <style>
+        body {
+            overflow: hidden;
+            font-family: sans-serif;
+            height: 100%;
+            width: 100%;
+            
+        }
+        .bg-dark {
+            background: rgb(46, 42, 42);
+        }
+        .controller {
+            margin-bottom: 3px;
+        }
+        h1 {
+            background-color: gray;
+            text-align: center;
+            font-size: 50px;
+            text-shadow: 2px;
+        }
+        .display-2 {
+            color: white;
+        }
+        .mt-3 {
+            color: rgb(204, 39, 39);
+        }
+        .container {
+            text-align: center;
+            margin: 5px 25%;
+        }
+        .text-success {
+            color: green;
+            font-size: 3pc;
+        }
+        .card {
+            flex-direction:row;
+            justify-content: center;
+            align-items: center
+           
+        }
+        h5 {
+            font-size: 30px;
+            color: white;
+        }
+        .border {
+            color: rgb(59, 211, 38);
+            background: gray;
+            border: 1px solid rgb(100, 96, 96);
+            display: flex;
+            margin-bottom: 50px;
+            padding: 3% 3% 3% 3%;
+            font-size: 15px;
+            text-align: center;
+        }
+        .title {
+            color: white;
+            font-size: 15px;
+        }
+        .col {
+            color: white;
+            display: inline-block;
+            text-align: center;
+           
+        }
+        #time {
+            margin-right: 50px;
+            
+        }
+       
+    </style>
+
+</head>
+<body class="bg-dark text-white">
+    <header>
+        <h1>Typing Master</h1>
+    </header>
+    <div class="container text-center">
+
+        <!--Word & Input-->
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <p class="title">Type The Given Word Within
+                    <span class="text-success" id="seconds">5</span>
+                    Seconds:
+                </p>
+                <h2 class="display-2 mb-5" id="current-word">hello</h2>
+                <input type="text" class="form-control form-control-lg" placeholder="Start typing..." id="word-input" autofocus>
+                <h4 class="mt-3" id="message"></h4>
+
+                <!--Time & Score Columns-->
+                <div class="controller">
+                    <div class="col">
+                        <h3 >Time Left:
+                        <span id="time">0</span>
+                        </h3>
+                    </div>
+                    <div class="col">
+                        <h3>Score:
+                            <span id="score">0</span>
+                        </h3>
+                    </div>
+                </div>
+
+                <!--Instructions-->
+                <div class="row mt-5">
+                    <div class="col-md-12">
+                        <div class="card card-body bg-secondart text-white">
+                            <h5>Instructions</h5>
+                            <p class="border">Type each word in the given amount of seconds to score.
+                                To play again, just type the current word. Your score will reset
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+    
+
+    <script>
+
+        window.addEventListener('load', init);
+
+        //Available levels
+        const levels = {
+            easy: 5,
+            medium: 3,
+            hard: 2,
+        }
+
+        //to change levels
+        const currentLevel = levels.easy;
+
+        //the global variables
+        let time = currentLevel;
+        let score = 0;
+        let isPlaying;
+
+        //DOM
+        const wordInput = document.querySelector('#word-input');
+        const currentWord = document.querySelector('#current-word');
+        const scoreDisplay = document.querySelector('#score');
+        const timeDisplay = document.querySelector('#time');
+        const message = document.querySelector('#message');
+        const seconds = document.querySelector('#seconds');
+
+        const words = [
+            'a',
+            'b',
+            'c',
+            'd',
+            'e',
+            'f',
+            'g',
+            'h',
+            'i',
+            'j',
+            'k',
+            'l',
+            'm',
+            'n',
+            'o',
+            'p',
+            'q',
+            'r',
+            's',
+            't',
+            'u',
+            'v',
+            'w',
+            'x',
+            'y',
+            'z'
+
+            /*'hat',
+            'generate',
+            'establishment',
+            'compatible',
+            'investigate',
+            'definition'*/
+        ];
+
+        //initialize game
+        function init() {
+            //Show number of seconds in UI
+            seconds.innerHTML = currentLevel;
+
+           //load words from array
+           showWord(words);
+           //start matching on word input
+           wordInput.addEventListener('input',startMatch)
+            //call countdown every second
+            setInterval(countdown, 1000);
+        }
+
+        //Start match
+        function startMatch() {
+            if (matchWords()) {
+               isPlaying = true
+               time = currentLevel + 1;
+               showWord(words)
+               wordInput.value = '';
+               score++;
+            }
+            //if score is -1 , display 0
+            if(score === -1) {
+                scoreDisplay.innerHTML = 0;
+            }else{
+                scoreDisplay.innerHTML = score;
+            }
+            
+        }
+
+        //MatchWords currentWord to wordInput
+        function matchWords() {
+            messagecorrect()
+             if(wordInput.value === currentWord.innerHTML) {
+             message.innerHTML/*.style.color= 'green'*/ = 'correct!!!'
+             return true;
+             }else{
+             message.innerHTML = '';
+             return false;
+             }
+             
+        }
+        function messagecorrect() {
+            if (message.innerHTML = 'correct!!!') {
+                let context = message.innerHTML;
+                console.log('correct')
+                message.innerHTML = context.shadowColor='green';
+                
+            }
+        }
+
+        //pick & show random word
+        function showWord(words) {
+            //generate random index
+            const randIndex = Math.floor(Math.random()* words.length)
+            //output random word
+            currentWord.innerHTML = words[randIndex];
+            //check status of the game
+            setInterval(checkStatus, 50)
+        }
+
+        //Countdown timer
+        function countdown() {
+            //make sure time is not run out
+            if(time > 0) {
+                //decrement
+                time--;
+            }else if(time === 0){
+                //game is over
+                isPlaying = false;
+            }
+            //show time
+            timeDisplay.innerHTML = time;
+        }
+
+        //check game status
+        function checkStatus() {
+            if(!isPlaying && time ===0) {
+                message.innerHTML = 'Game Over!!!'
+                score = -1;
+            }
+        }
+
+
+    </script>
+</body>
+</html>
